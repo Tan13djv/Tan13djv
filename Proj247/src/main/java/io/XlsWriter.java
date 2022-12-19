@@ -12,16 +12,23 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.OptionalDouble;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class XlsWriter {
 
 
+    public static Logger log;
 
     public XlsWriter() {
 
     }
 
     public static void MakeTable(ArrayList<Statistics> stData, String filename) throws IOException {
+
+        log = Logger.getLogger(XlsWriter.class.getName());
+
+        FileOutputStream fileOutputStream = null;
         XSSFWorkbook workbook;
         workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet();
@@ -72,8 +79,13 @@ public class XlsWriter {
                       cell = row.createCell(4);
                       cell.setCellValue(st.getUniName());
                   }
+        try {
+            fileOutputStream = new FileOutputStream(filename);
+        }
+        catch (Exception e){
+            log.severe("Файл статистики не создан: "+ e.toString());
+        }
 
-        FileOutputStream fileOutputStream = new FileOutputStream(filename);
         workbook.write(fileOutputStream);
 
     }

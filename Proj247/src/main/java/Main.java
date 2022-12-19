@@ -10,19 +10,49 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 import util.JsonUtil;
 import util.MyStatistic;
 
+
+
 public class Main {
+    public static Logger log;
+
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+    log = Logger.getLogger(Main.class.getName());
+
+        try {
+            if (Main.class.getClassLoader().getResource("loggin.properties") != null)
+                LogManager.getLogManager().readConfiguration(Main.class.getClassLoader().getResource("loggin.properties").openStream());
+            else
+            {
+                System.err.println("Файл logging.properties не найден: ");
+            }
+        } catch (Exception e) {
+            System.err.println("Не удается открыть файл logging.properties" + e.toString());
+        }
+
+
 
     Comparator UnComp = null;
     Comparator StComp = null;
 
-    ImportData NewData = new ImportData(Main.class.getClassLoader().getResource("universityInfo.xlsx").getFile());
+    log.info("Начало импорта данных");
+    ImportData NewData = null;
+    if (Main.class.getClassLoader().getResource("universityInfo.xlsx") != null) {
+        NewData = new ImportData(Main.class.getClassLoader().getResource("universityInfo.xlsx").getFile());
+        NewData.ImportUniversity();
+        NewData.ImportStudients();
+        log.info("Данные импортированы");
+    }
+       else{
+        log.severe("Данные не импортированы. Файл не найден");
+       }
 
-    NewData.ImportUniversity();
-    NewData.ImportStudients();
 
 
 /*
@@ -67,6 +97,15 @@ public class Main {
      NewData.Univs.stream().sorted(UnComp).forEach(System.out::println);
      NewData.Stud.stream().sorted(StComp).forEach(System.out::println);
  */
+    if(NewData != null) {
+        NewData.Univs.sort(MyComparator.getMyComparator(UnivChoseCompare.YearOfFoundationComparator));
+        log.info("Сортировка университетов выполнена");
+        NewData.Stud.sort(MyComparator.getMyComparator(StudChoseCompare.ExamScoreComparator));
+        log.info("Сортировка студентов выполнена");
+    }
+    else {
+        log.warning("Сортировка не выполнена, данные не найдены");
+    }
 /*
         System.out.println("NewData.Univs.stream().count() = " + NewData.Univs.stream().count());
         System.out.println("NewData.Stud.stream().count() = " + NewData.Stud.stream().count());
@@ -103,8 +142,14 @@ public class Main {
             }
         );
 */
+        if(NewData != null) {
        XlsWriter.MakeTable(MyStatistic.CollectData(NewData.Stud,NewData.Univs),"statistic.xlsx");
-        System.out.println("File statistic.xlsx was created");
+        log.info("Файл statistic.xlsx создан");
+        }
+        else {
+                log.warning("Файл статистики не создан, данные не найдены");
+        }
+
     }
 
 

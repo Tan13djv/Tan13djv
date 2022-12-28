@@ -1,19 +1,37 @@
 package model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import enums.StudyProfile;
+
+import javax.xml.bind.annotation.*;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class University {
-    @SerializedName(value = "Код УЗ")
+    //@SerializedName(value = "Код УЗ")
+    @SerializedName(value = "universityId")
+    @Expose(serialize = true,deserialize = true)
+    @XmlElement(name = "universityId", required = true)
     String id;
-    @SerializedName(value = "Полное название")
+    //@SerializedName(value = "Полное название")
+    @SerializedName(value = "universityName")
+    @Expose(serialize = true,deserialize = true)
+    @XmlElement(name = "universityName",required = true)
     String fullName;
-    @SerializedName(value = "Короткое название")
+    //@SerializedName(value = "Короткое название")
+    @Expose(serialize = false,deserialize = true)
+    @XmlTransient
     String shortName;
-    @SerializedName(value = "Год основания")
+    //@SerializedName(value = "Год основания")
+    @Expose(serialize = false,deserialize = true)
+    @XmlTransient
     int yearOfFoundation;
 
-    @SerializedName(value = "Профиль обучения")
+    //@SerializedName(value = "Профиль обучения")
+    @SerializedName(value = "universityProfile")
+    @Expose(serialize = true,deserialize = true)
+    @XmlElement(name = "universityProfile",required = false)
     StudyProfile mainProfile;
 
     public StudyProfile getMainProfile() {

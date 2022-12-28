@@ -42,7 +42,7 @@ public class MyStatistic {
 
                 uniName = Univs.stream().filter((s) -> s.getMainProfile() == prof).map(University::getShortName).collect(Collectors.toList()).toString();
 
-                Stat.add(new Statistics(prof.getProfileName(), avgExamScore, stdCount, univCount, uniName));
+                Stat.add(new Statistics(prof, avgExamScore, stdCount, univCount, uniName));
             }
         }
         return Stat;

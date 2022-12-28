@@ -1,12 +1,17 @@
 import enums.StudChoseCompare;
 import enums.UnivChoseCompare;
 import io.ImportData;
+import io.JsonWriter;
 import io.XlsWriter;
+import io.XmlWriter;
+import model.DataStructure;
+import model.Statistics;
 import model.Student;
 import model.University;
 import util.MyComparator;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -15,13 +20,17 @@ import java.util.logging.Logger;
 
 import util.JsonUtil;
 import util.MyStatistic;
+import util.XmlUtil;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 
 
 public class Main {
     public static Logger log;
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, JAXBException, TransformerConfigurationException, ParserConfigurationException {
 
     log = Logger.getLogger(Main.class.getName());
 
@@ -52,6 +61,7 @@ public class Main {
        else{
         log.severe("Данные не импортированы. Файл не найден");
        }
+
 
 
 
@@ -96,7 +106,7 @@ public class Main {
         }
      NewData.Univs.stream().sorted(UnComp).forEach(System.out::println);
      NewData.Stud.stream().sorted(StComp).forEach(System.out::println);
- */
+*/
     if(NewData != null) {
         NewData.Univs.sort(MyComparator.getMyComparator(UnivChoseCompare.YearOfFoundationComparator));
         log.info("Сортировка университетов выполнена");
@@ -106,12 +116,15 @@ public class Main {
     else {
         log.warning("Сортировка не выполнена, данные не найдены");
     }
+
 /*
+
         System.out.println("NewData.Univs.stream().count() = " + NewData.Univs.stream().count());
         System.out.println("NewData.Stud.stream().count() = " + NewData.Stud.stream().count());
 
+
         String JsonUniver = JsonUtil.ConvertUniversArrTo(NewData.Univs);
-        String JsonStuds =  JsonUtil.ConvertStudArrTo(NewData.Stud);
+        String JsonStuds = JsonUtil.ConvertStudArrTo(NewData.Stud);
 
         System.out.println(JsonUniver);
         System.out.println(JsonStuds);
@@ -142,12 +155,22 @@ public class Main {
             }
         );
 */
+        ArrayList<Statistics> ArrStat = new ArrayList<Statistics>();
         if(NewData != null) {
-       XlsWriter.MakeTable(MyStatistic.CollectData(NewData.Stud,NewData.Univs),"statistic.xlsx");
-        log.info("Файл statistic.xlsx создан");
+
+          ArrStat = MyStatistic.CollectData(NewData.Stud,NewData.Univs);
+
+          XmlUtil xmlUtil = new XmlUtil();
+          DataStructure dataStructure = new DataStructure().setData(NewData.Stud,NewData.Univs,ArrStat);
+
+          XmlWriter.MakeFile(xmlUtil.marshal(dataStructure), "xmlfile_"+String.valueOf(LocalDate.now())+".xml");
+          JsonWriter.MakeFile(JsonUtil.SerialToJson(dataStructure), "json_"+String.valueOf(LocalDate.now())+".json");
+
+          XlsWriter.MakeTable(ArrStat,"statistic.xlsx");
+
         }
         else {
-                log.warning("Файл статистики не создан, данные не найдены");
+                log.warning("Файлы не созданы, данные не найдены");
         }
 
     }

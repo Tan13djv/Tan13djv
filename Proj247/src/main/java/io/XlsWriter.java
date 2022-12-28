@@ -69,7 +69,7 @@ public class XlsWriter {
                   {
                       row = sheet.createRow((short) i++);
                       cell = row.createCell(0);
-                      cell.setCellValue(st.getMainProfile());
+                      cell.setCellValue(st.getMainProfile().getProfileName());
                       cell = row.createCell(1);
                       cell.setCellValue((new BigDecimal(st.getAvgExamScore(),new MathContext(3, RoundingMode.HALF_UP))).toString());
                       cell = row.createCell(2);
@@ -81,12 +81,13 @@ public class XlsWriter {
                   }
         try {
             fileOutputStream = new FileOutputStream(filename);
+            workbook.write(fileOutputStream);
+            log.info("Файл statistic.xlsx создан");
         }
         catch (Exception e){
             log.severe("Файл статистики не создан: "+ e.toString());
         }
 
-        workbook.write(fileOutputStream);
 
     }
 }

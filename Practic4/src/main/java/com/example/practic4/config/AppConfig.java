@@ -36,7 +36,6 @@ public class AppConfig {
         cbrService.setUnmarshaller(jaxb2Marshaller);
         return cbrService;
     }
-
     @Bean
     public CharacterEncodingFilter characterEncodingFilter() {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
@@ -44,4 +43,5 @@ public class AppConfig {
         filter.setForceEncoding(true);
         return filter;
     }
+
 }

@@ -1,6 +1,8 @@
 package com.example.practic4.service;
 
 
+import com.example.practic4.repository.IncomeRepository;
+import com.example.practic4.repository.SpendRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

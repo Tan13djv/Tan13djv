@@ -19,12 +19,14 @@ public class CurrencyController {
     private final StatService statService;
 
     @GetMapping("/getCurrencies")
+
   //  @ApiOperation(value = "Получение курса всех валют на текущий день")
     public List<ValuteCursOnDate> getValuteCursOnDate() throws Exception {
         return centralRussianBankService.getCurrenciesFromCbr();
     }
 
     @GetMapping("/getCurrency/{code}")
+
   //  @ApiOperation(value = "Получение курса определенно валюты на текущий день")
     public ValuteCursOnDate getCourseForCurrency(@PathVariable String code) throws Exception {
         return centralRussianBankService.getCourseForCurrency(code);

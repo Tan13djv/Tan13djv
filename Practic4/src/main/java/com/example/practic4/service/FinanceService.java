@@ -2,6 +2,8 @@ package com.example.practic4.service;
 
 import com.example.practic4.entity.Income;
 import com.example.practic4.entity.Spend;
+import com.example.practic4.repository.IncomeRepository;
+import com.example.practic4.repository.SpendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
